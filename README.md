@@ -35,23 +35,39 @@ gambling framing. **No method guarantees winning bets. Gamble responsibly.**
 
 ## Install
 
-Copy the skill into your personal skills directory:
+`install.sh` supports four agents. Pick yours:
 
 ```bash
-./install.sh          # copies skills/predicting-football-matches -> ~/.claude/skills/
+./install.sh claude      # Claude Code   -> ~/.claude/skills/
+./install.sh codex       # OpenAI Codex  -> ~/.agents/skills/
+./install.sh opencode    # OpenCode      -> ~/.config/opencode/skills/
+./install.sh cursor      # Cursor        -> ./.cursor/rules/  (current project)
+./install.sh all         # claude + codex + opencode (the global agents)
 ```
 
-or manually:
+| Agent | Native SKILL.md? | Installs to | Scope |
+|---|---|---|---|
+| **Claude Code** | yes | `~/.claude/skills/<name>/` | global |
+| **Codex CLI** | yes | `~/.agents/skills/<name>/` | global |
+| **OpenCode** | yes | `~/.config/opencode/skills/<name>/` | global |
+| **Cursor** | no | `.cursor/rules/<name>.mdc` + `.cursor/rules/<name>/` | **per-project** |
 
-```bash
-cp -R skills/predicting-football-matches ~/.claude/skills/
-```
+Notes:
+- **Codex & OpenCode** read the SKILL.md folder format natively (the
+  [agentskills.io](https://agentskills.io) standard) — it's just a folder copy.
+  OpenCode additionally auto-reads `~/.claude/skills/`, so a Claude Code install is
+  already picked up there too.
+- **Cursor** has no skills mechanism, so the installer *generates* a project rule
+  (`.cursor/rules/<name>.mdc`) from `SKILL.md` and copies the helper script +
+  references alongside it. Cursor rules are **project-scoped** (global rules are
+  UI-only) — re-run `./install.sh cursor` (or `--project /path`) in each project.
 
-Restart Claude Code (or start a new session). The skill auto-triggers on requests
+Flags: `-f/--force` overwrites without asking; `--project DIR` targets a specific
+project for the Cursor install. Path overrides via `CLAUDE_SKILLS_DIR`,
+`CODEX_SKILLS_DIR`, `OPENCODE_SKILLS_DIR`.
+
+Restart the agent (or start a new session). The skill auto-triggers on requests
 like *"dự đoán trận …"*, *"soi kèo …"*, or *"predict / analyse match X vs Y"*.
-
-> Personal-skill paths differ by agent: Claude Code uses `~/.claude/skills/`.
-> Adjust the target if you use a different agent.
 
 ## The model script
 
